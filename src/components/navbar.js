@@ -20,10 +20,10 @@ const Navbar = () => {
                 <Link to='/' className='nav-link'><i className="fa-solid fa-house" style={{color: '#71a1f4'}}></i>  Inicio</Link>
               </li>
               <li className="nav-item">
-                <Link to='/Ingreso' className='nav-link'><i className="fa-solid fa-hand-holding-dollar" style={{color: '#71a1f4'}}></i> Nuevo ingreso</Link>
+                <Link to='/Ingreso' className='nav-link'><i className="fa-solid fa-sack-dollar" style={{color: '#71a1f4'}}></i> Nuevo registro</Link>
               </li>
               <li className="nav-item">
-                <Link to='/Gasto' className='nav-link'><i class="fa-solid fa-sack-dollar" style={{color: '#71a1f4'}}></i> Nuevo gasto</Link>
+                <Link to='/Gasto' className='nav-link'><i class="fa-solid fa-list" style={{color: '#71a1f4'}}></i> Mostrar todos</Link>
               </li>
               <li className="nav-item">
                 <Link to='/OCRapp' className='nav-link'><i class="fa-solid fa-camera" style={{color: '#71a1f4'}}></i> OCR</Link>
