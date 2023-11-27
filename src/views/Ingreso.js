@@ -1,9 +1,43 @@
 import React from "react";
 import Sidebar from "../components/navbar";
 import { db } from "../firebaseConfig/firebase";
-import { addDoc, collection, doc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { useState, useEffect } from "react";
 
 function Ingreso() {
+  //empieza con recibir los datos de firebase
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getValue = async () => {
+      const val = doc(db, "usuarios", "Y3yo8XHNpHeinIHM7N5k");
+      const CollectionVal = collection(val, "ganancias");
+
+      const querySnapshot = await getDocs(CollectionVal);
+
+      setData(
+        querySnapshot.docs.map((doc) => ({
+          monto: parseInt(doc.data().monto, 10), // Accede a la propiedad 'monto' de 'doc.data()'
+        }))
+      );
+    };
+
+    getValue();
+  }, []);
+  const suma = data.reduce(
+    (acumulador, objeto) => acumulador + objeto.monto,
+    0
+  );
+  console.log(suma);
+  //termina de recibir los datos
+
+  //evento de registrar transaccion
   const handledAdd = (e) => {
     e.preventDefault();
 
@@ -13,6 +47,7 @@ function Ingreso() {
     const conceptoValue = e.target.concepto.value;
     const fechaValue = e.target.fecha.value;
 
+    //agregar a ingreso
     if (e.target.select.value === "1") {
       if (
         montoValue !== undefined &&
@@ -32,6 +67,7 @@ function Ingreso() {
       }
     }
 
+    //agregar a gasto
     if (e.target.select.value === "2") {
       if (
         montoValue !== undefined &&

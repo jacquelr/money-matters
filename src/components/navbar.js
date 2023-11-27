@@ -23,6 +23,9 @@ const Navbar = () => {
                 <Link to='/Ingreso' className='nav-link'><i className="fa-solid fa-sack-dollar" style={{color: '#71a1f4'}}></i> Nuevo registro</Link>
               </li>
               <li className="nav-item">
+                <Link to='/Ahorros' className='nav-link'><i className="fa-solid fa-piggy-bank" style={{color: '#71a1f4'}}></i> Cuenta ahorro</Link>
+              </li>
+              <li className="nav-item">
                 <Link to='/Gasto' className='nav-link'><i class="fa-solid fa-list" style={{color: '#71a1f4'}}></i> Mostrar todos</Link>
               </li>
               <li className="nav-item">
