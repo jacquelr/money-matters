@@ -3,7 +3,7 @@ import Sidebar from '../components/navbar'
 import { Pie } from 'react-chartjs-2';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
-import LineChart from './LineChart';
+
 
 Chart.register(ArcElement, Tooltip, Legend);
 

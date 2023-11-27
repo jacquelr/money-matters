@@ -4,7 +4,7 @@ import './App.css';
 import OCRapp from './views/OCRapp';
 import Inicio from './views/Inicio';
 import Ingreso from './views/Ingreso';
-import Gasto from './views/Gasto';
+import Lista from './views/Lista';
 import Ahorros from './views/Ahorros';
 
 //importar el router
@@ -19,7 +19,7 @@ function App() {
             <Route path='/' element={ <Inicio /> } />
             <Route path='/OCRapp' element={ <OCRapp /> } />
             <Route path='/Ingreso' element={ <Ingreso /> } />
-            <Route path='/Gasto' element={ <Gasto /> } />
+            <Route path='/Lista' element={ <Lista /> } />
             <Route path='/Ahorros' element={ <Ahorros /> } />
           </Route>
         </Routes>
