@@ -1,5 +1,4 @@
 import React from 'react'
-import Sidebar from '../components/navbar'
 import MyNavbar from '../components/navbar'
 
 function Gasto() {
