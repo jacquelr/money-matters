@@ -47,12 +47,12 @@ function Ahorros() {
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Si, borrarlo.",
+      confirmButtonText: "Si, borrarlo",
     }).then((result) => {
       if (result.isConfirmed) {
         //llamamos a la funcion para eliminar
         eliminarAhorro(savingsId);
-        Swal.fire("Eliminado!", "El registro ha sido eliminado.", "éxito");
+        Swal.fire("Eliminado!", "El registro ha sido eliminado", "éxito");
       }
     });
   };
