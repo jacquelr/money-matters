@@ -1,167 +1,170 @@
-import React from 'react'
-import Navbar from '../components/navbar'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/navbar";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
+import { db } from "../firebaseConfig/firebase";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  deleteDoc,
+  doc,
+  query,
+} from "firebase/firestore";
+
+const MySwal = withReactContent(Swal);
 
 function Ahorros() {
+  const userID = "Y3yo8XHNpHeinIHM7N5k";
+  const [ahorros, setAhorros] = useState([]);
+
+  const getAhorros = async (idUsuario) => {
+    const q = query(collection(db, "usuarios", idUsuario, "ahorros"));
+    const data = await getDocs(q);
+    setAhorros(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    console.log(ahorros);
+  };
+
+  function eliminarAhorro(savingsId) {
+    const savingsRef = doc(db, "usuarios", userID, "ahorros", savingsId);
+    deleteDoc(savingsRef)
+      .then(() => {
+        console.log("Document successfully deleted!");
+        getAhorros(userID); // Llama a la función para actualizar la lista de gastos
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+  }
+
+  const confirmDelete = (savingsId) => {
+    MySwal.fire({
+      title: "¿Elimina el registro de la cuenta de ahorros?",
+      text: "Esta accion no podrá revertirse",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Si, borrarlo.",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //llamamos a la funcion para eliminar
+        eliminarAhorro(savingsId);
+        Swal.fire("Eliminado!", "El registro ha sido eliminado.", "éxito");
+      }
+    });
+  };
+
+  useEffect(() => {
+    getAhorros(userID);
+  }, []);
+
   return (
     <div>
-        <Navbar/>
-        <br/><br/>
-      <form>
-        <div class="row justify-content-center">
-          <div class="col-md-12">
-            <div class="wrapper">
-              <div class="row no-gutters">
-                <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
-                  <div class="contact-wrap w-100 p-md-5 p-4">
-                    <h3 class="mb-4">Get in touch</h3>
-                    <div id="form-message-warning" class="mb-4"></div>
-                    <div id="form-message-success" class="mb-4">
-                      Your message was sent, thank you!
-                    </div>
-                    <form
-                      method="POST"
-                      id="contactForm"
-                      name="contactForm"
-                      class="contactForm"
-                    >
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label class="label" for="name">
-                              Full Name
-                            </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              name="name"
-                              id="name"
-                              placeholder="Name"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label class="label" for="email">
-                              Email Address
-                            </label>
-                            <input
-                              type="email"
-                              class="form-control"
-                              name="email"
-                              id="email"
-                              placeholder="Email"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-md-12">
-                          <div class="form-group">
-                            <label class="label" for="subject">
-                              Subject
-                            </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              name="subject"
-                              id="subject"
-                              placeholder="Subject"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-md-12">
-                          <div class="form-group">
-                            <label class="label" for="#">
-                              Message
-                            </label>
-                            <textarea
-                              name="message"
-                              class="form-control"
-                              id="message"
-                              cols="30"
-                              rows="4"
-                              placeholder="Message"
-                            ></textarea>
-                          </div>
-                        </div>
-                        <div class="col-md-12">
-                          <div class="form-group">
-                            <input
-                              type="submit"
-                              value="Send Message"
-                              class="btn btn-primary"
-                            />
-                            <div class="submitting"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-5 d-flex align-items-stretch">
-                  <div class="info-wrap bg-primary w-100 p-md-5 p-4">
-                    <h3>Let's get in touch</h3>
-                    <p class="mb-4">
-                      We're open for any suggestion or just to have a chat
-                    </p>
-                    <div class="dbox w-100 d-flex align-items-start">
-                      <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="fa fa-map-marker"></span>
-                      </div>
-                      <div class="text pl-3">
-                        <p>
-                          <span>Address:</span> 198 West 21th Street, Suite 721
-                          New York NY 10016
-                        </p>
-                      </div>
-                    </div>
-                    <div class="dbox w-100 d-flex align-items-center">
-                      <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="fa fa-phone"></span>
-                      </div>
-                      <div class="text pl-3">
-                        <p>
-                          <span>Phone:</span>{" "}
-                          <a href="tel://1234567920">+ 1235 2355 98</a>
-                        </p>
-                      </div>
-                    </div>
-                    <div class="dbox w-100 d-flex align-items-center">
-                      <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="fa fa-paper-plane"></span>
-                      </div>
-                      <div class="text pl-3">
-                        <p>
-                          <span>Email:</span>{" "}
-                          <a href="/cdn-cgi/l/email-protection#630a0d050c231a0c1611100a17064d000c0e">
-                            <span
-                              class="__cf_email__"
-                              data-cfemail="80e9eee6efc0f9eff5f2f3e9f4e5aee3efed"
-                            >
-                              [email&#160;protected]
-                            </span>
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                    <div class="dbox w-100 d-flex align-items-center">
-                      <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="fa fa-globe"></span>
-                      </div>
-                      <div class="text pl-3">
-                        <p>
-                          <span>Website</span> <a href="#">yoursite.com</a>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      <Navbar />
+      <br />
+      <br />
+      <div className="container" style={{ marginTop: "40px" }}>
+        <div className="row">
+          <div className="col-5">
+            <form>
+              <div className="mb-3">
+                <label style={{ marginTop: "10px" }}>
+                  Eliga si el registro es un ingreso o gasto de ahorros:
+                </label>
+                <select
+                  className="form-select"
+                  name="select"
+                  style={{ marginTop: "10px" }}
+                >
+                  <option selected>Seleccione una opción</option>
+                  <option value={1}>Ingreso a ahorros</option>
+                  <option value={2}>Gasto de ahorros</option>
+                </select>
+
+                <label style={{ marginTop: "10px" }}>Monto:</label>
+                <input
+                  className="form-control"
+                  name="monto"
+                  type="number"
+                  style={{ marginTop: "10px" }}
+                  placeholder="0"
+                ></input>
+
+                <label style={{ marginTop: "10px" }}>Concepto:</label>
+                <input
+                  className="form-control"
+                  name="concepto"
+                  type="text"
+                  style={{ marginTop: "10px" }}
+                  placeholder="Concepto o nota"
+                ></input>
+
+                <label style={{ marginTop: "10px" }}>Fecha:</label>
+                <input
+                  className="form-control"
+                  name="fecha"
+                  type="date"
+                  style={{ marginTop: "10px" }}
+                ></input>
+
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ marginTop: "20px" , backgroundColor:'#71a1f4'}}
+                >
+                  Agregar
+                </button>
               </div>
+            </form>
+          </div>
+          <div className="col-7">
+            <div className="shadow-sm p-3 mb-5 bg-white rounded">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Concepto</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {}
+                  {ahorros.map((ahorro) => (
+                    <tr key={ahorro.id}>
+                      <td>{ahorro.concepto}</td>
+                      <td>{ahorro.fecha}</td>
+                      <td>{ahorro.monto}</td>
+                      <td>
+                        <Link
+                          to={`/Editar/${ahorro.id}`}
+                          className="btn btn-light"
+                        >
+                          <i className="fa-solid fa-pencil"></i>
+                        </Link>
+                        <button
+                          onClick={() => {
+                            confirmDelete(ahorro.id);
+                          }}
+                          className="btn"
+                          style={{backgroundColor:'#71a1f4'}}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Ahorros
+export default Ahorros;

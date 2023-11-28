@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from "react";
 import Navbar from "../components/navbar";
-import "../css/styles.css";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link } from "react-router-dom";
 //import {collection, getDocs,getDoc, deleteDoc, doc} from 'firebase/firestore'
@@ -48,18 +47,18 @@ function Lista() {
   //5 - Funcion de confirmacion para Sweet Alert 2
   const confirmDelete = (gastoid) => {
     MySwal.fire({
-      title: "¿Elimina el usero?",
-      text: "You won't be able to revert this!",
+      title: "¿Elimina el gasto?",
+      text: "Esta accion no podrá revertirse",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Si, borrarlo.",
     }).then((result) => {
       if (result.isConfirmed) {
         //llamamos a la fcion para eliminar
         eliminarGasto(gastoid);
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        Swal.fire("Eliminado!", "El gasto ha sido eliminado.", "éxito");
       }
     });
   };
