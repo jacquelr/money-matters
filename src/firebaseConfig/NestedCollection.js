@@ -21,11 +21,11 @@ function NestedCollection() {
     <div>
       <form onSubmit={(e) => handledAdd(e)}>
         <input name="title" type="number" placeholder="cantidad" />
-        <br />
+        <br/>
         <input name="concepto" placeholder="concepto" />
-        <br />
+        <br/>
         <input name="fecha" type="date" />
-        <br />
+        <br/>
 
         <button>Add</button>
       </form>

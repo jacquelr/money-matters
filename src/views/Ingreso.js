@@ -14,30 +14,31 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 function Ingreso() {
   //empieza con recibir los datos de firebase
   const [data, setData] = useState([]);
+  const [suma, setSuma] = useState(0);
+
+  const getValue = async () => {
+    const val = doc(db, "usuarios", "Y3yo8XHNpHeinIHM7N5k");
+    const CollectionVal = collection(val, "ganancias");
+
+    const querySnapshot = await getDocs(CollectionVal);
+
+    setData(
+      querySnapshot.docs.map((doc) => ({
+        monto: parseInt(doc.data().monto, 10), // Accede a la propiedad 'monto' de 'doc.data()'
+      }))
+    );
+
+    setSuma(data.reduce(
+      (acumulador, objeto) => acumulador + objeto.monto,
+      0
+    ))
+  };
 
   useEffect(() => {
-    const getValue = async () => {
-      const val = doc(db, "usuarios", "Y3yo8XHNpHeinIHM7N5k");
-      const CollectionVal = collection(val, "ganancias");
-
-      const querySnapshot = await getDocs(CollectionVal);
-
-      setData(
-        querySnapshot.docs.map((doc) => ({
-          monto: parseInt(doc.data().monto, 10), // Accede a la propiedad 'monto' de 'doc.data()'
-        }))
-      );
-    };
-
     getValue();
   }, []);
-
-  const suma = data.reduce(
-    (acumulador, objeto) => acumulador + objeto.monto,
-    0
-  );
   
-  //console.log(suma);
+  console.log(suma);
   //termina de recibir los datos
 
   //evento de registrar transaccion

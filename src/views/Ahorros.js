@@ -21,7 +21,7 @@ function Ahorros() {
   const userID = "Y3yo8XHNpHeinIHM7N5k";
   
   const handledAdd= (e) => {
-    e.preventDefault();
+    //e.preventDefault();
 
     const val = doc(db, "usuarios", userID);
     const montoValue = parseInt(e.target.monto.value,10);
@@ -90,6 +90,8 @@ function Ahorros() {
       <div className="container" style={{ marginTop: "40px" }}>
         <div className="row">
           <div className="col-5">
+            <h5>Agregue un nuevo registro de la cuenta de ahorros:</h5>
+            <p>Si va a registrar un gasto de la cuenta, ingrese el monto en negativo.</p>
             <form onSubmit={(e) => handledAdd(e)}>
               <div className="mb-3">
                 <label style={{ marginTop: "10px" }}>Monto:</label>
