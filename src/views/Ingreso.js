@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Ingreso() {
   //empieza con recibir los datos de firebase

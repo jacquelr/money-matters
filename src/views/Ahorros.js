@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from '../components/navbar'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function Ahorros() {
   return (

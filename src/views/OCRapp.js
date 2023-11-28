@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import {createWorker} from 'tesseract.js';
 import Sidebar from '../components/navbar';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const OCRapp = () => {
 

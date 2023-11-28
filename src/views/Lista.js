@@ -1,12 +1,12 @@
 import React, {useEffect,useState} from "react";
 import Navbar from "../components/navbar";
 import "../css/styles.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link } from "react-router-dom";
 //import {collection, getDocs,getDoc, deleteDoc, doc} from 'firebase/firestore'
 import { db } from "../firebaseConfig/firebase";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { async } from "@firebase/util";
 
 import {
   collection,
@@ -14,6 +14,7 @@ import {
   getDoc,
   deleteDoc,
   doc,
+  query,
 } from "firebase/firestore";
 
 const MySwal = withReactContent(Swal);
@@ -25,8 +26,8 @@ function Lista() {
   
   //gastos jacquetry
   const userID = 'Y3yo8XHNpHeinIHM7N5k';
-  const [gastos, setGastos] = ([]);
-  const [ingresos, setIngresos] = ([]);
+  const [gastos, setGastos] = useState([]);
+  //const [ingresos, setIngresos] = useState([]);
 
   //2 - referenciamos a la DB firestore
   const usersCollection = collection(db, "usuarios");
@@ -63,93 +64,70 @@ function Lista() {
     });
   };
 
-  //getGastos
-  const getgastos = async () => {
-    //const data = await getDocs(usersCollection);
-    //console.log(data.docs)
-    //setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    //console.log(users)
-    setGastos ()
-  } 
-
-  useEffect(() => {
-    const getData = async () => {
-       const data = await getDocs(usersCollection);
-       const newUsers = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-       setUsers(newUsers);
+  //getgastos
+  const getGastos = async (idUsuario) => {
+    const q = query(collection(db, "usuarios", idUsuario, "gastos"));
+    const data = await getDocs(q);
+    setGastos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    console.log(gastos)
+   };
    
-       const newGastos = [];
-       const newGanancias = [];
-   
-       for (let user of newUsers) {
-         //const gastos = await getGastos(user.id);
-         //const ganancias = await getGanancias(user.id);
-         //newGastos.push(gastos);
-         //newGanancias.push(ganancias);
-       }
-   
-       setGastos(newGastos);
-       //setGanancias(newGanancias);
-    };
-   
-    getData();
-   }, []);
+   useEffect(() => {
+    if (users.length > 0) {
+       getGastos(users[0].id);
+    }
+   }, [users]);
 
   //6 - usamos useEffect
   useEffect(() => {
     getusers();
-    getgastos(userID);
     // eslint-disable-next-line
   }, []);
 
   return (
     <div>
         <Navbar/>
-        <br/><br/>
-
-        <div className="container">
-        <div className="row">
-          <div className="col">
-            <div className="d-grid gap-2">
-              <Link to="/Ingreso" className="btn btn-secondary mt-2 mb-2">
-                Nuevo Registro
-              </Link>
-            </div>
-            <table className="table table-dark table-hover">
-              <thead>
-                <tr>
-                  <th>Concepto</th>
-                  <th>Fecha</th>
-                  <th>Monto</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.nombre}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      <Link to={`/edit/${user.id}`} className="btn btn-light">
-                        <i className="fa-solid fa-pencil"></i>
-                      </Link>
-                      <button
-                        onClick={() => {
-                          confirmDelete(user.id);
-                        }}
-                        className="btn btn-danger"
-                      >
-                        <i className="fa-solid fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <br/><br/><br/>  
+        <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+          <button type="button" class="btn btn-outline-primary">Ingresos</button>
+          <button type="button" class="btn btn-outline-primary">Gastos</button>
         </div>
-      </div>
-
+        <div className='d-grid gap-2'>
+          <Link to="/Ingreso" className='btn btn-secondary mt-2 mb-2'>Create</Link>
+        </div>
+      <table className="table table-hover">
+        <thead>
+          <tr className="table-info">
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {}
+          {gastos.map((gasto) => (
+            <tr key={gasto.id}>
+              <td>{gasto.concepto}</td>
+              <td>{gasto.fecha}</td>
+              <td>{gasto.monto}</td>
+              <td>
+                <Link to='/Ingreso' className="btn btn-light">
+                  <i className="fa-solid fa-pencil"></i>
+                </Link>
+                  <button
+                    onClick={() => {
+                      confirmDelete(gasto.id);
+                    }}
+                    className="btn btn-primary"
+                    >
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
