@@ -46,7 +46,7 @@ function Lista() {
     getusers();
   };
   //5 - Funcion de confirmacion para Sweet Alert 2
-  const confirmDelete = (id) => {
+  const confirmDelete = (gastoid) => {
     MySwal.fire({
       title: "¿Elimina el usero?",
       text: "You won't be able to revert this!",
@@ -58,26 +58,42 @@ function Lista() {
     }).then((result) => {
       if (result.isConfirmed) {
         //llamamos a la fcion para eliminar
-        deleteuser(id);
+        eliminarGasto(gastoid);
         Swal.fire("Deleted!", "Your file has been deleted.", "success");
       }
     });
   };
-
+  
   //getgastos
   const getGastos = async (idUsuario) => {
     const q = query(collection(db, "usuarios", idUsuario, "gastos"));
     const data = await getDocs(q);
     setGastos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     console.log(gastos)
-   };
-   
-   useEffect(() => {
+  };
+
+    //delete gasto
+  
+  function eliminarGasto(expenseId) {
+    const expenseRef = doc(db, "usuarios", userID, "gastos", expenseId);
+    deleteDoc(expenseRef).then(() => {
+      console.log("Document successfully deleted!");
+      getGastos(userID); // Llama a la función para actualizar la lista de gastos
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+  }
+  
+
+
+  //useEffect 
+  useEffect(() => {
     if (users.length > 0) {
        getGastos(users[0].id);
     }
    }, [users]);
 
+   
   //6 - usamos useEffect
   useEffect(() => {
     getusers();
@@ -112,7 +128,7 @@ function Lista() {
               <td>{gasto.fecha}</td>
               <td>{gasto.monto}</td>
               <td>
-                <Link to='/Ingreso' className="btn btn-light">
+                <Link to={`/Editar/${gasto.id}`} className="btn btn-light">
                   <i className="fa-solid fa-pencil"></i>
                 </Link>
                   <button
