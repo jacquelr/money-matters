@@ -119,7 +119,7 @@ function Inicio() {
             </div>
           </div>
           <div className="col-8">
-            <div className="shadow-lg p-4 mt-4 mb-5 bg-white rounded">
+            <div className="shadow-lg p-4 mt-2 mb-3 bg-white rounded">
               <h2> B I E N V E N I D O </h2>
             </div>
             <div className="shadow-lg p-2 mb-3 bg-white rounded">
@@ -127,6 +127,9 @@ function Inicio() {
             </div>
             <div className="shadow-lg p-2 mb-3 bg-white rounded">
               <h3> Total de gastos: ${gasto}</h3>
+            </div>
+            <div className="shadow-lg p-2 mb-3 bg-white rounded">
+              <h3> Total de ahorros: ${ahorro}</h3>
             </div>
           </div>
         </div>

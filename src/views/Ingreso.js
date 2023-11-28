@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "../components/navbar";
 import { db } from "../firebaseConfig/firebase";
+import { useNavigate } from "react-router-dom"
 import {
   addDoc,
   collection,
@@ -15,6 +16,7 @@ function Ingreso() {
   //empieza con recibir los datos de firebase
   const [data, setData] = useState([]);
   const [suma, setSuma] = useState(0);
+  const navigate = useNavigate();
 
   const getValue = async () => {
     const val = doc(db, "usuarios", "Y3yo8XHNpHeinIHM7N5k");
@@ -65,6 +67,7 @@ function Ingreso() {
           fecha: fechaValue,
         });
         alert("Ganancia reportada");
+        navigate('/')
       } else {
         alert("Error: Some values are undefined");
         console.log(montoValue, conceptoValue, fechaValue);
@@ -85,6 +88,7 @@ function Ingreso() {
           fecha: fechaValue,
         });
         alert("Gasto reportado");
+        navigate('/')
       } else {
         alert("Error: Some values are undefined");
       }

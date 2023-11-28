@@ -26,6 +26,9 @@ const OCRapp = () => {
     setMatches(foundMatches);
     //console.log(foundMatches.text);
 
+    //prueba total 
+    console.log(handleTotalMatch(matches))
+
   },[selectedImage, keywords]);
   
   useEffect(() => {
@@ -41,10 +44,34 @@ const OCRapp = () => {
     }
   }
 
+
+  //prueba
+  const handleTotalMatch = (matches) => {
+    let totalString = "";
+    for (let i = 0; i < matches.length; i++) {
+       if (matches[i].toLowerCase() === "total") {
+         if (matches[i + 1]) {
+           totalString = matches[i + 1];
+           break;
+         }
+       }
+    }
+    return totalString;
+   }
+   
+   const [totalValue, setTotalValue] = useState("");
+   
+   useEffect(() => {
+    if (matches.length > 0) {
+       setTotalValue(handleTotalMatch(matches));
+    }
+   }, [matches]);
+
+
   return (
     <div>
       <Sidebar/>
-        <p>Ya llevame diosito</p> <p>Ya llevame diosito</p>
+        <div className='container' style={{marginTop:'100px'}}>
         <p>En esta sección podrá seleccionar una imagen de un ticket o factura para ingresar su gasto.<br/> Asegurese de que la imagen sea legible.<br/> Puede tomar unos segundos.</p>
         <div className='row no-gutters'>
             <label for="formFile" class="form-label">Seleccione un archivo:</label>
@@ -67,6 +94,7 @@ const OCRapp = () => {
             </div>
           )}
           </div>
+    </div>
     </div>
     
   );

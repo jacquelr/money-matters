@@ -21,31 +21,54 @@ const MySwal = withReactContent(Swal);
 function Lista() {
 
   //1 - configuramos los hooks
-  const [users, setUsers] = useState([]);
-  
-  //gastos jacquetry
   const userID = 'Y3yo8XHNpHeinIHM7N5k';
   const [gastos, setGastos] = useState([]);
-  //const [ingresos, setIngresos] = useState([]);
+  const [ingresos, setIngresos] = useState([]);
+  const [registros, setRegistros] = useState([]);
 
-  //2 - referenciamos a la DB firestore
-  const usersCollection = collection(db, "usuarios");
+  //INGRESOS
+  //Mensaje de confirmacion SW2 de ingreso
+  const confirmDeleteIncome = (ingresoid) => {
+    MySwal.fire({
+      title: "¿Elimina el ingreso?",
+      text: "Esta accion no podrá revertirse",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Si, borrarlo",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //llamamos a la funcion para eliminar
+        eliminarIngreso(ingresoid);
+        Swal.fire("Eliminado!", "El ingreso ha sido eliminado", "éxito");
+      }
+    });
+  };
+  
+  //Obtener los ingresos de la base de datos
+  const getIngresos = async (userID) => {
+    const q = query(collection(db, "usuarios", userID, "ganancias"));
+    const data = await getDocs(q);
+    setIngresos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    console.log(ingresos)
+  };
 
-  //3 - Funcion para mostrar TODOS los docs
-  const getusers = async () => {
-    const data = await getDocs(usersCollection);
-    //console.log(data.docs)
-    setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    //console.log(users)
-  };
-  //4 - Funcion para eliminar un doc
-  const deleteuser = async (id) => {
-    const userDoc = doc(db, "usuarios", id);
-    await deleteDoc(userDoc);
-    getusers();
-  };
-  //5 - Funcion de confirmacion para Sweet Alert 2
-  const confirmDelete = (gastoid) => {
+  //Eliminar un gasto de la base de datos
+  function eliminarIngreso(incomeid) {
+    const incomeRef = doc(db, "usuarios", userID, "ganancias", incomeid);
+    deleteDoc(incomeRef).then(() => {
+      console.log("Document successfully deleted!");
+      getIngresos(userID); // Llama a la función para actualizar la lista de ingresos
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+  }
+
+
+  //GASTOS
+  //Mensaje de confirmacion SW2 de gasto
+  const confirmDeleteExpense = (gastoid) => {
     MySwal.fire({
       title: "¿Elimina el gasto?",
       text: "Esta accion no podrá revertirse",
@@ -53,17 +76,17 @@ function Lista() {
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Si, borrarlo.",
+      confirmButtonText: "Si, borrarlo",
     }).then((result) => {
       if (result.isConfirmed) {
-        //llamamos a la fcion para eliminar
+        //llamamos a la funcion para eliminar
         eliminarGasto(gastoid);
-        Swal.fire("Eliminado!", "El gasto ha sido eliminado.", "éxito");
+        Swal.fire("Eliminado!", "El gasto ha sido eliminado", "éxito");
       }
     });
   };
   
-  //getgastos
+  //Obtener los gastos de la base de datos
   const getGastos = async (userID) => {
     const q = query(collection(db, "usuarios", userID, "gastos"));
     const data = await getDocs(q);
@@ -71,8 +94,7 @@ function Lista() {
     console.log(gastos)
   };
 
-    //delete gasto
-  
+  //Eliminar un gasto de la base de datos
   function eliminarGasto(expenseId) {
     const expenseRef = doc(db, "usuarios", userID, "gastos", expenseId);
     deleteDoc(expenseRef).then(() => {
@@ -87,28 +109,24 @@ function Lista() {
 
   //useEffect 
   useEffect(() => {
-    if (users.length > 0) {
-       getGastos(userID);
-    }
-   }, [users]);
+    getGastos(userID);
+    getIngresos(userID);
+ }, []);
 
-   
-  //6 - usamos useEffect
-  useEffect(() => {
-    getusers();
-    // eslint-disable-next-line
-  }, []);
+  //useEffect(() => {
+  //  getGastos(userID);
+  //  getIngresos(userID);
+  //  const registrosConcatenados = [].concat(gastos, ingresos);
+  //  setRegistros(registrosConcatenados);
+  // }, [gastos, ingresos]);
+
 
   return (
     <div>
         <Navbar/>
-        <br/><br/><br/><br/>
-        <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
-          <button type="button" class="btn btn-outline-primary">Ingresos</button>
-          <button type="button" class="btn btn-outline-primary">Gastos</button>
-        </div>
-        <div className='d-grid gap-2'>
-          <Link to="/Ingreso" className='btn btn-secondary mt-2 mb-2'>Create</Link>
+        <div className="container" style={{marginTop:'100px'}}>
+        <div className='d-grid gap-1'>
+          <Link to="/Ingreso" className='btn btn-secondary mt-2 mb-2'>Crear nuevo registro</Link>
         </div>
       <table className="table table-hover">
         <thead>
@@ -121,18 +139,18 @@ function Lista() {
         </thead>
         <tbody>
           {}
-          {gastos.map((gasto) => (
-            <tr key={gasto.id}>
-              <td>{gasto.concepto}</td>
-              <td>{gasto.fecha}</td>
-              <td>{gasto.monto}</td>
+          {ingresos.map((ingreso) => (
+            <tr key={ingreso.id} className="table-success">
+              <td>{ingreso.concepto}</td>
+              <td>{ingreso.fecha}</td>
+              <td>{ingreso.monto}</td>
               <td>
-                <Link to={`/Editar/${gasto.id}`} className="btn btn-light">
+                <Link to={`/EditarIngreso/${ingreso.id}`} className="btn btn-light">
                   <i className="fa-solid fa-pencil"></i>
                 </Link>
                   <button
                     onClick={() => {
-                      confirmDelete(gasto.id);
+                      confirmDeleteIncome(ingreso.id);
                     }}
                     className="btn btn-primary"
                     >
@@ -141,8 +159,30 @@ function Lista() {
               </td>
             </tr>
           ))}
+          {gastos.map((gasto) => (
+            <tr key={gasto.id} className="table-danger">
+              <td>{gasto.concepto}</td>
+              <td>{gasto.fecha}</td>
+              <td>{gasto.monto}</td>
+              <td>
+                <Link to={`/EditarGasto/${gasto.id}`} className="btn btn-light">
+                  <i className="fa-solid fa-pencil"></i>
+                </Link>
+                  <button
+                    onClick={() => {
+                      confirmDeleteExpense(gasto.id);
+                    }}
+                    className="btn btn-primary"
+                    >
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+              </td>
+            </tr>
+          ))}
+          
         </tbody>
       </table>
+      </div>
     </div>
   )
 }
