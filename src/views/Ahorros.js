@@ -12,12 +12,33 @@ import {
   deleteDoc,
   doc,
   query,
+  addDoc,
 } from "firebase/firestore";
 
 const MySwal = withReactContent(Swal);
 
 function Ahorros() {
   const userID = "Y3yo8XHNpHeinIHM7N5k";
+  
+  const handledAdd= (e) => {
+    e.preventDefault();
+
+    const val = doc(db, "usuarios", userID);
+    const montoValue = parseInt(e.target.monto.value,10);
+    const conceptoValue = e.target.concepto.value;
+    const fechaValue = e.target.fecha.value;
+  
+  
+    //agregar a ingreso
+    const CollectionVal = collection(val, "ahorros");
+    addDoc(CollectionVal, {
+      monto:montoValue,
+      concepto:conceptoValue,
+      fecha:fechaValue,
+    });
+    alert("Ahorro reportado");
+  }
+
   const [ahorros, setAhorros] = useState([]);
 
   const getAhorros = async (idUsuario) => {
@@ -69,21 +90,8 @@ function Ahorros() {
       <div className="container" style={{ marginTop: "40px" }}>
         <div className="row">
           <div className="col-5">
-            <form>
+            <form onSubmit={(e) => handledAdd(e)}>
               <div className="mb-3">
-                <label style={{ marginTop: "10px" }}>
-                  Eliga si el registro es un ingreso o gasto de ahorros:
-                </label>
-                <select
-                  className="form-select"
-                  name="select"
-                  style={{ marginTop: "10px" }}
-                >
-                  <option selected>Seleccione una opción</option>
-                  <option value={1}>Ingreso a ahorros</option>
-                  <option value={2}>Gasto de ahorros</option>
-                </select>
-
                 <label style={{ marginTop: "10px" }}>Monto:</label>
                 <input
                   className="form-control"

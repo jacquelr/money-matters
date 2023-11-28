@@ -64,8 +64,8 @@ function Lista() {
   };
   
   //getgastos
-  const getGastos = async (idUsuario) => {
-    const q = query(collection(db, "usuarios", idUsuario, "gastos"));
+  const getGastos = async (userID) => {
+    const q = query(collection(db, "usuarios", userID, "gastos"));
     const data = await getDocs(q);
     setGastos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     console.log(gastos)
@@ -88,7 +88,7 @@ function Lista() {
   //useEffect 
   useEffect(() => {
     if (users.length > 0) {
-       getGastos(users[0].id);
+       getGastos(userID);
     }
    }, [users]);
 
@@ -102,7 +102,7 @@ function Lista() {
   return (
     <div>
         <Navbar/>
-        <br/><br/><br/>  
+        <br/><br/><br/><br/>
         <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
           <button type="button" class="btn btn-outline-primary">Ingresos</button>
           <button type="button" class="btn btn-outline-primary">Gastos</button>

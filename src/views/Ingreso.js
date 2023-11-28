@@ -31,11 +31,13 @@ function Ingreso() {
 
     getValue();
   }, []);
+
   const suma = data.reduce(
     (acumulador, objeto) => acumulador + objeto.monto,
     0
   );
-  console.log(suma);
+  
+  //console.log(suma);
   //termina de recibir los datos
 
   //evento de registrar transaccion
@@ -44,7 +46,7 @@ function Ingreso() {
 
     const val = doc(db, "usuarios", "Y3yo8XHNpHeinIHM7N5k");
 
-    const montoValue = e.target.monto.value;
+    const montoValue = parseInt(e.target.monto.value,10);
     const conceptoValue = e.target.concepto.value;
     const fechaValue = e.target.fecha.value;
 
@@ -93,7 +95,8 @@ function Ingreso() {
       <Sidebar />
       <p>KHE</p>
       <p>KHE</p>
-
+      <div className="container" style={{marginTop:'80px'}}>
+      <div className="shadow p-3 mb-5 bg-body-tertiary rounded">
       <form onSubmit={(e) => handledAdd(e)}>
         <div className="mb-3">
           <label style={{ marginTop: "10px" }}>
@@ -113,6 +116,7 @@ function Ingreso() {
           <input
             className="form-control"
             name="monto"
+            min={0}
             type="number"
             style={{ marginTop: "10px" }}
             placeholder="$00.00"
@@ -144,6 +148,8 @@ function Ingreso() {
           </button>
         </div>
       </form>
+      </div>
+      </div>
     </div>
   );
 }

@@ -31,7 +31,7 @@ const Navbar = () => {
                 <Link to='/OCRapp' className='nav-link'><i class="fa-solid fa-camera" style={{color: '#71a1f4'}}></i> OCR</Link>
               </li>
             </ul>
-            <Link to="/" className='btn btn-outline-primary' >Iniciar Sesión</Link>
+            
           </div>
         </div>
       </nav>
