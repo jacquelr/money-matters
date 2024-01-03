@@ -2,7 +2,6 @@ import React, {useEffect,useState} from "react";
 import Navbar from "../components/navbar";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link } from "react-router-dom";
-//import {collection, getDocs,getDoc, deleteDoc, doc} from 'firebase/firestore'
 import { db } from "../firebaseConfig/firebase";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -54,7 +53,7 @@ function Lista() {
     console.log(ingresos)
   };
 
-  //Eliminar un gasto de la base de datos
+  //Eliminar un ingreso de la base de datos
   function eliminarIngreso(incomeid) {
     const incomeRef = doc(db, "usuarios", userID, "ganancias", incomeid);
     deleteDoc(incomeRef).then(() => {
